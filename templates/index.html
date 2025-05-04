@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>ChatGPT</title>
+</head>
+<body>
+    <h1>chat with ChatGPT</h1>
+    <input type="text" id="userInput" placeholder="Please enter..." style="width: 300px;">
+    <button onclick="sendMessage()">send</button>
+
+    <h2>response</h2>
+    <div id="responseArea"></div>
+
+    <script>
+    function sendMessage() {
+        const userInput = document.getElementById('userInput').value;
+        fetch('/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({message: userInput})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                document.getElementById('responseArea').innerText = data.reply;
+            } else {
+                document.getElementById('responseArea').innerText = "error" + data.message;
+            }
+        })
+        .catch(error => {
+            document.getElementById('responseArea').innerText = "failed request" + error;
+        });
+    }
+    </script>
+</body>
+</html>
